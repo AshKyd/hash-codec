@@ -1,3 +1,4 @@
+/** accepts a stream and returns an ArrayBuffer with the contents of the stream */
 async function streamToArray(stream) {
   const chunks = [];
   for await (const chunk of stream) {
@@ -18,8 +19,13 @@ async function streamToArray(stream) {
   return newArray;
 }
 
-var CODEC = "deflate-raw";
-async function compress(string) {
+const CODEC = "deflate-raw";
+/**
+ * Compress a string using deflate-raw.
+ *
+ * This requires CompressionStreams, so older versions of Safari need a polyfill.
+ */
+async function zip(string) {
   const compressedStream = new Blob([string], { type: "text/plain" })
     .stream()
     .pipeThrough(new CompressionStream(CODEC));
@@ -27,7 +33,12 @@ async function compress(string) {
   return buffer;
 }
 
-async function decompress(buffer) {
+/**
+ * Decompress a some data that was previously compressed with `zip`.
+ *
+ * This requires CompressionStreams, so older versions of Safari need a polyfill.
+ */
+async function unzip(buffer) {
   const decompressedStream = new Blob([buffer])
     .stream()
     .pipeThrough(new DecompressionStream(CODEC));
@@ -37,10 +48,12 @@ async function decompress(buffer) {
   return text;
 }
 
+/** Convert an ArrayBuffer to base64  */
 function bin2base64(binary) {
   return btoa(String.fromCharCode.apply(null, binary)).replace(/=+$/, "");
 }
 
+/** Convert base64 string encoded with `bin2base64` back to an ArrayBuffer */
 function base642bin(str) {
   const decoded = atob(str);
   const chars = decoded.split("").map((char) => char.charCodeAt());
@@ -49,19 +62,20 @@ function base642bin(str) {
   newArray.set(chars);
   return newArray;
 }
-(async () => {
-  const toCompress = '{"name": "Ash", "caption": "it\'s all gonna be fine"}';
-  const compressed = await compress(toCompress);
-  const compressedEncoded = bin2base64(compressed);
-  const compressedDecoded = base642bin(compressedEncoded);
-  const decompressed = await decompress(compressedDecoded);
 
-  console.log({
-    compressed,
-    compressedEncoded,
-    decompressed,
-    compressedLength: compressed.length,
-    decompressedLength: decompressed.length,
-    compressedEncodedLength: compressedEncoded.length,
-  });
-})();
+export async function encodeString(string) {
+  const compressed = await zip(string);
+  const compressedEncoded = bin2base64(compressed);
+  return compressedEncoded;
+}
+
+export async function decodeString(encodedString) {
+  const compressedDecoded = base642bin(encodedString);
+  const decoded = await unzip(compressedDecoded);
+  return decoded;
+}
+
+export const stringCodec = {
+  encode: encodeString,
+  decode: decodeString,
+};

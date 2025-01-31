@@ -1,35 +1,43 @@
 import normaliseSchema from "./normaliseSchema.js";
 
-export function decode({ schema, data: encodedData }) {
+export async function decode({ schema, data: encodedData }) {
   const normalisedSchema = normaliseSchema(schema);
   const decodedObject = {};
-  Object.entries(normalisedSchema).forEach(([srcKey, schemaDef]) => {
-    const { type, key, values, defaultValue } = schemaDef;
+  const keyPromises = Object.entries(normalisedSchema).map(
+    async ([srcKey, schemaDef]) => {
+      const { type, key, values, defaultValue, codec } = schemaDef;
 
-    let decodedValue = encodedData[key || srcKey];
+      let decodedValue = encodedData[key || srcKey];
 
-    if (!decodedValue) {
-      if (typeof defaultValue !== "undefined") {
-        decodedObject[srcKey] = defaultValue;
+      if (!decodedValue) {
+        if (typeof defaultValue !== "undefined") {
+          decodedObject[srcKey] = defaultValue;
+        }
+        return;
       }
-      return;
-    }
 
-    if (type === "number") {
-      decodedValue = Number(decodedValue);
-    }
-    if (type === "boolean") {
-      decodedValue = decodedValue === "1";
-    }
-    if (type === "enum") {
-      const resolvedValue = values[decodedValue];
-      if (typeof resolvedValue === "undefined") {
-        decodedValue = defaultValue;
-      } else {
-        decodedValue = resolvedValue;
+      if (codec) {
+        decodedValue = await codec.decode(decodedValue);
       }
+
+      if (type === "number") {
+        decodedValue = Number(decodedValue);
+      }
+      if (type === "boolean") {
+        decodedValue = decodedValue === "1";
+      }
+      if (type === "enum") {
+        const resolvedValue = values[decodedValue];
+        if (typeof resolvedValue === "undefined") {
+          decodedValue = defaultValue;
+        } else {
+          decodedValue = resolvedValue;
+        }
+      }
+      decodedObject[srcKey] = decodedValue;
     }
-    decodedObject[srcKey] = decodedValue;
-  });
+  );
+
+  await Promise.all(keyPromises);
   return decodedObject;
 }
