@@ -1,8 +1,9 @@
 {
   "name": "hash-codec",
   "version": "0.0.0",
-  "main": "index.js",
   "type": "module",
+  "main": "src/index.js",
+  "module": "src/index.js",
   "scripts": {
     "test": "npx mocha test/*"
   },
@@ -10,6 +11,10 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@abcnews/base-36-text": "^1.0.1",
     "mocha": "^11.0.1"
+  },
+  "peerDependencies": {
+    "svelte": "^5.0.0"
   }
 }

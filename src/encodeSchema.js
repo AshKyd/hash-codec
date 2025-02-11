@@ -1,6 +1,6 @@
 import normaliseSchema from "./normaliseSchema.js";
 
-export default async function encode({ schema, data }) {
+export default async function encodeSchema({ schema, data }) {
   const normalisedSchema = normaliseSchema(schema);
   const encodedObject = {};
 
