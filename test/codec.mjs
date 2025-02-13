@@ -3,7 +3,7 @@ import encodeSchema from "../src/encodeSchema.js";
 import decodeSchema from "../src/decodeSchema.js";
 import { GzipCodec } from "../src/GzipCodec/GzipCodec.js";
 import { getRleCodec } from "../src/RleCodec/RleCodec.js";
-import { BinaryCodec } from "../src/BinaryCodec/BinaryCodec.js";
+import { getBinaryCodec } from "../src/BinaryCodec/BinaryCodec.js";
 
 const schema = {
   name: {
@@ -164,13 +164,6 @@ describe("custom codec (RleCodec)", async function () {
 });
 
 describe("custom codec (BinaryCodec)", async function () {
-  const schema = {
-    binary: {
-      type: "custom",
-      codec: BinaryCodec,
-    },
-  };
-
   const binary = [
     false,
     false,
@@ -186,18 +179,49 @@ describe("custom codec (BinaryCodec)", async function () {
     false,
   ];
 
-  it("should encode", async () => {
-    const res = await encodeSchema({
-      schema,
-      data: { binary },
+  describe("5 bit alphanumeric", () => {
+    const schema = {
+      binary: {
+        type: "custom",
+        codec: getBinaryCodec(),
+      },
+    };
+    it("should encode", async () => {
+      const res = await encodeSchema({
+        schema,
+        data: { binary },
+      });
+      assert.deepEqual(res, { binary: "ek4" });
     });
-    assert.deepEqual(res, { binary: "ek4" });
+    it("should decode", async () => {
+      const res = await decodeSchema({
+        schema,
+        data: { binary: "ek4" },
+      });
+      assert.deepEqual(res, { binary });
+    });
   });
-  it("should decode", async () => {
-    const res = await decodeSchema({
-      schema,
-      data: { binary: "ek4" },
+
+  describe("4 bit with rle", () => {
+    const schema = {
+      binary: {
+        type: "custom",
+        codec: getBinaryCodec({ maxBits: 4 }),
+      },
+    };
+    it("should encode", async () => {
+      const res = await encodeSchema({
+        schema,
+        data: { binary },
+      });
+      assert.deepEqual(res, { binary: "b2fo" });
     });
-    assert.deepEqual(res, { binary });
+    it("should decode", async () => {
+      const res = await decodeSchema({
+        schema,
+        data: { binary: "b2fo" },
+      });
+      assert.deepEqual(res, { binary });
+    });
   });
 });
