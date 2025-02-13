@@ -3,6 +3,7 @@ import encodeSchema from "../src/encodeSchema.js";
 import decodeSchema from "../src/decodeSchema.js";
 import { GzipCodec } from "../src/GzipCodec/GzipCodec.js";
 import { getRleCodec } from "../src/RleCodec/RleCodec.js";
+import { BinaryCodec } from "../src/BinaryCodec/BinaryCodec.js";
 
 const schema = {
   name: {
@@ -159,5 +160,44 @@ describe("custom codec (RleCodec)", async function () {
       data: { s: "o5who6xo" },
     });
     assert.deepEqual(res, { myCustomString: "wooooohooooooo" });
+  });
+});
+
+describe("custom codec (BinaryCodec)", async function () {
+  const schema = {
+    binary: {
+      type: "custom",
+      codec: BinaryCodec,
+    },
+  };
+
+  const binary = [
+    false,
+    false,
+    false,
+    true,
+    false,
+    true,
+    false,
+    true,
+    true,
+    true,
+    true,
+    false,
+  ];
+
+  it("should encode", async () => {
+    const res = await encodeSchema({
+      schema,
+      data: { binary },
+    });
+    assert.deepEqual(res, { binary: "ek4" });
+  });
+  it("should decode", async () => {
+    const res = await decodeSchema({
+      schema,
+      data: { binary: "ek4" },
+    });
+    assert.deepEqual(res, { binary });
   });
 });
