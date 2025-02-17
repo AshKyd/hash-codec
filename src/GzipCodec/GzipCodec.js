@@ -90,7 +90,7 @@ function bin2base64(binary) {
 /** Convert base64 string encoded with `bin2base64` back to an ArrayBuffer */
 function base642bin(str) {
   const decoded = decode(str);
-  const chars = decoded.split("").map((char) => char.charCodeAt());
+  const chars = decoded.split("").map((char) => char.charCodeAt(0));
 
   const newArray = new Uint8Array(chars.length);
   newArray.set(chars);

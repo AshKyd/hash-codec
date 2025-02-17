@@ -1,5 +1,11 @@
 import normaliseSchema from "./normaliseSchema.js";
 
+/**
+ * Decode data using the given schema
+ * @param {Object} options
+ * @param {Object<string,any>} options.schema - Schema to initialise, see the readme.
+ * @param {Object<string,any>} options.data - data to decode
+ */
 export default async function decodeSchema({ schema, data: encodedData }) {
   const normalisedSchema = normaliseSchema(schema);
   const decodedObject = {};

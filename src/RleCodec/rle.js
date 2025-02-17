@@ -1,5 +1,11 @@
 /**
- * Encode an aplha string using basic run-length encoding.
+ * @typedef {object} Memo
+ * @property {string} char - The character in the memo.
+ * @property {number} repeated - The number of times the character is repeated.
+ */
+
+/**
+ * Encode an alpha string using basic run-length encoding.
  *
  * e.g. 'aaaa' becomes 'a4'
  *
@@ -15,16 +21,26 @@ export function encodeRle(string) {
 
   return string
     .split("")
-    .reduce((memo, value, index) => {
-      if (index === 0 || value !== memo[memo.length - 1][0]) {
-        memo.push([value, 1]);
-      } else {
-        memo[memo.length - 1][1]++;
-      }
+    .reduce(
+      /**
+       *
+       * @param {Memo[]} memo
+       * @param {string} char
+       * @param {number} index
+       * @returns
+       */
+      (memo, char, index) => {
+        if (index === 0 || char !== memo[memo.length - 1].char) {
+          memo.push({ char: char, repeated: 1 });
+        } else {
+          memo[memo.length - 1].repeated++;
+        }
 
-      return memo;
-    }, [])
-    .reduce((memo, [char, repeated]) => {
+        return memo;
+      },
+      []
+    )
+    .reduce((memo, { char, repeated }) => {
       return (memo += repeated === 1 ? char : char + String(repeated));
     }, "");
 }

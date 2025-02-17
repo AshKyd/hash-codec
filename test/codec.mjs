@@ -107,6 +107,10 @@ describe("decodeSchema", async function () {
     const res = await decodeSchema({ schema, data: { country: "1" } });
     assert.equal(res.country, "New Zealand");
   });
+  it("should return value of enum when it's zero", async function () {
+    const res = await decodeSchema({ schema, data: { country: "0" } });
+    assert.equal(res.country, "Australia");
+  });
   it("should return default value for unknown enum", async function () {
     const res = await decodeSchema({ schema, data: { country: "76" } });
     assert.equal(res.country, "Australia");
