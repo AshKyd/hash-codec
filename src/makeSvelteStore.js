@@ -27,14 +27,16 @@ export function makeSvelteStore(schema) {
     //@ts-ignore
     hashConfig.set(data);
     hashConfig.subscribe(async (data) => {
-      if (!data) return;
+      if (!data) {
+        return;
+      }
       const encodedData = await encodeSchema({ schema, data });
       const stringifiedHash = "#" + stringify(encodedData);
       if (window.location.hash !== stringifiedHash) {
         window.location.hash = stringifiedHash;
       }
     });
-  );
+  });
 
   return hashConfig;
 }
