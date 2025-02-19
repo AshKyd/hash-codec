@@ -1,5 +1,12 @@
 import normaliseSchema from "./normaliseSchema.js";
 
+/**
+ *
+ * @param {Object} options
+ * @param {Object<string, any>} options.schema
+ * @param {Object<string, any>} options.data
+ * @returns {Promise<Object<string, any>>}
+ */
 export default async function encodeSchema({ schema, data }) {
   const normalisedSchema = normaliseSchema(schema);
   const encodedObject = {};

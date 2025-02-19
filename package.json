@@ -11,7 +11,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@abcnews/alternating-case-to-object": "^3.1.1",
+    "@abcnews/alternating-case-to-object": "github:abcnews/alternating-case-to-object#feature/stringify-build",
     "@abcnews/base-36-text": "^1.0.1",
     "mocha": "^11.0.1"
   },

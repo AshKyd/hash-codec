@@ -29,7 +29,6 @@ export function makeSvelteStore(schema) {
     hashConfig.subscribe(async (data) => {
       if (!data) return;
       const encodedData = await encodeSchema({ schema, data });
-      // @ts-ignore
       const stringifiedHash = "#" + stringify(encodedData);
       if (window.location.hash !== stringifiedHash) {
         window.location.hash = stringifiedHash;
