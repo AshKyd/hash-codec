@@ -91,12 +91,16 @@ describe("decodeSchema", async function () {
     const res = await decodeSchema({ schema, data: { age: "99" } });
     assert.equal(res.age, 99);
   });
-  it("should encode falsy bools", async function () {
+  it("should decode falsy bools", async function () {
     const res = await decodeSchema({ schema, data: { haskeys: "0" } });
     assert.equal(res.hasKeys, false);
   });
-  it("should encode truthy bools", async function () {
+  it("should decode truthy bools", async function () {
     const res = await decodeSchema({ schema, data: { haskeys: "1" } });
+    assert.equal(res.hasKeys, true);
+  });
+  it("should decode truthy bools when acto has cast to number", async function () {
+    const res = await decodeSchema({ schema, data: { haskeys: 1 } });
     assert.equal(res.hasKeys, true);
   });
   it("should use srcKey when key prop not set in schema", async function () {

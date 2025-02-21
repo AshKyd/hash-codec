@@ -1,5 +1,7 @@
 import normaliseSchema from "./normaliseSchema.js";
 
+const ALLOWED_TYPES = ["number", "boolean", "enum", "string", "custom"];
+
 /**
  * Decode data using the given schema
  * @param {Object} options
@@ -12,10 +14,15 @@ export default async function decodeSchema({ schema, data: encodedData }) {
   const keyPromises = Object.entries(normalisedSchema).map(
     async ([srcKey, schemaDef]) => {
       const { type, key, values, defaultValue, codec } = schemaDef;
+      if (!ALLOWED_TYPES.includes(type)) {
+        throw new Error(
+          `Unknown type "${type}", must be one of ${ALLOWED_TYPES}`
+        );
+      }
 
       let decodedValue = encodedData[key || srcKey];
 
-      if (!decodedValue) {
+      if (typeof decodedValue === "undefined") {
         if (typeof defaultValue !== "undefined") {
           decodedObject[srcKey] = defaultValue;
         }
@@ -30,7 +37,7 @@ export default async function decodeSchema({ schema, data: encodedData }) {
         decodedValue = Number(decodedValue);
       }
       if (type === "boolean") {
-        decodedValue = decodedValue === "1";
+        decodedValue = Number(decodedValue) === 1;
       }
       if (type === "enum") {
         const resolvedValue = values[decodedValue];
