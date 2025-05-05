@@ -113,16 +113,18 @@ const schema = {
 ### Writing custom codecs
 You can write a codec of your own, as long as it has an encode() and decode() function. These may be synchronous or async.
 
+```js
 const twoDecimalPointCodec = {
     encode: num => Math.round(num*100),
     decode: string => Number(string)/100
 }
+```
 
 ### Svelte Integration
 
 The svelte store is useful for builders and contexts where you want to sync the data to and from a hash in the URL bar. This is probably not useful as a production-facing utility.
 
-```javascript
+```js
 import { makeSvelteStore } from 'hash-codec';
 
 const store = makeSvelteStore(initialData, schema);
