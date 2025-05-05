@@ -1,6 +1,6 @@
 import { parse, stringify } from "@abcnews/alternating-case-to-object";
-import decodeSchema from "./decodeSchema.js";
-import encodeSchema from "./encodeSchema.js";
+import decodeSchema from "../decodeSchema.js";
+import encodeSchema from "../encodeSchema.js";
 
 /**
  * Decode an ACTO hash with the given schema
