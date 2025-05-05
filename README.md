@@ -130,6 +130,12 @@ import { makeSvelteStore } from 'hash-codec';
 const store = makeSvelteStore(initialData, schema);
 ```
 
+Or with Typescript, specify a type for your store:
+
+```ts
+const store = makeSvelteStore<HashConfigType>(initialData, schema);
+```
+
 ## Development
 
 ```bash
