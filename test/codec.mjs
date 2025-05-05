@@ -26,8 +26,8 @@ const schema = {
     defaultValue: false,
   },
   url: {
-    type: "string",
-  },
+    type: "base36string",
+  }
 };
 
 describe("encodeSchema", async function () {
@@ -54,7 +54,7 @@ describe("encodeSchema", async function () {
   });
   it("should use srcKey when key prop not set in schema", async function () {
     const res = await encodeSchema({ schema, data: { url: "https://ash.ms" } });
-    assert.deepEqual(res, { url: "https://ash.ms" });
+    assert.deepEqual(res, { url: "4ehldqa208nq5igvj0aa2b" });
   });
   it("should return index for enum", async function () {
     const res = await encodeSchema({
@@ -104,7 +104,7 @@ describe("decodeSchema", async function () {
     assert.equal(res.hasKeys, true);
   });
   it("should use srcKey when key prop not set in schema", async function () {
-    const res = await decodeSchema({ schema, data: { url: "https://ash.ms" } });
+    const res = await decodeSchema({ schema, data: { url: "4ehldqa208nq5igvj0aa2b" } });
     assert.equal(res.url, "https://ash.ms");
   });
   it("should return value of enum", async function () {

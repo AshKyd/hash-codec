@@ -1,3 +1,4 @@
+import { encode } from "@abcnews/base-36-text";
 import normaliseSchema from "./normaliseSchema.js";
 
 /**
@@ -29,6 +30,10 @@ export default async function encodeSchema({ schema, data }) {
 
       let encodedValue = srcValue;
 
+      if (type === 'base36string') {
+        encodedValue = encode(encodedValue);
+      }
+
       if (type === "enum") {
         const resolvedEnum = values.indexOf(srcValue);
         if (resolvedEnum === -1) {
@@ -44,6 +49,10 @@ export default async function encodeSchema({ schema, data }) {
 
       if (type === "boolean") {
         encodedValue = encodedValue ? 1 : 0;
+      }
+
+      if (type === "number") {
+        encodedValue = Math.round(encodedValue);
       }
 
       encodedObject[resolvedKey] = encodedValue;

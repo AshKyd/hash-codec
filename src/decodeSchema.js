@@ -1,6 +1,7 @@
+import { decode } from "@abcnews/base-36-text";
 import normaliseSchema from "./normaliseSchema.js";
 
-const ALLOWED_TYPES = ["number", "boolean", "enum", "string", "custom"];
+const ALLOWED_TYPES = ["number", "boolean", "enum", "string", "base36string", "custom"];
 
 /**
  * Decode data using the given schema
@@ -33,6 +34,9 @@ export default async function decodeSchema({ schema, data: encodedData }) {
         decodedValue = await codec.decode(decodedValue);
       }
 
+      if (type === 'base36string') {
+        decodedValue = decode(decodedValue);
+      }
       if (type === "number") {
         decodedValue = Number(decodedValue);
       }

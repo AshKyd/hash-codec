@@ -76,6 +76,10 @@ async function decodeBinary(string, { maxBits }) {
   return values.slice(1);
 }
 
+/**
+ * A binary codec can encode an array of boolean values (true/false) into a
+ * smaller alphanumeric string representation.
+ */
 export function getBinaryCodec({ maxBits = 5 } = {}) {
   if (![4, 5].includes(maxBits)) {
     throw new Error("Bits must be 4 for alpha, and 5 for alphanumeric");
