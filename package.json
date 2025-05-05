@@ -1,6 +1,6 @@
 {
-  "name": "hash-codec",
-  "version": "0.0.0",
+  "name": "@abcnews/hash-codec",
+  "version": "1.0.0",
   "type": "module",
   "main": "src/index.js",
   "module": "src/index.js",
@@ -11,11 +11,13 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@abcnews/alternating-case-to-object": "github:abcnews/alternating-case-to-object#feature/stringify-build",
-    "@abcnews/base-36-text": "^1.0.1",
-    "mocha": "^11.0.1"
+    "@abcnews/alternating-case-to-object": "^3.2.0",
+    "@abcnews/base-36-text": "^1.0.1"
   },
   "peerDependencies": {
     "svelte": "^5.20.1"
+  },
+  "devDependencies": {
+    "mocha": "^11.2.2"
   }
 }
